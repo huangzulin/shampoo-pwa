@@ -5,7 +5,7 @@
       <button v-if="!shampooDate" @click="shampoo(true)">要</button>
       <button v-if="!shampooDate" @click="shampoo(false)">不要</button>
     </div>
-
+    <button @click="shampoo(true)">还是洗一下吧</button>
   </div>
 </template>
 
@@ -22,7 +22,11 @@ export default {
     }
   },
   created() {
-    var task = localforage.getItem('shampoo_date').then(value => {
+    this.init();
+  },
+  methods: {
+    init(){
+      var task = localforage.getItem('shampoo_date').then(value => {
       if (value) {
         this.shampooDate = moment(value)
       }
@@ -34,7 +38,7 @@ export default {
       if (date.isSame(moment(), 'day')) {
         this.msg = '今天洗过啦'
       } else {
-        var days = date.diff(moment(), 'days')
+        var days = moment().diff(date, 'days')
         if (days == 1) {
           this.msg = '不！洗！头！'
         } else {
@@ -45,15 +49,15 @@ export default {
     })
     
     this.msg = '啥情况？'
-  },
-  methods: {
+    },
     shampoo(need) {
       if (need) {
         this.shampooDate = moment()
       } else {
         this.shampooDate = moment().add(-1, 'days')
       }
-      localforage.setItem('shampoo_date', this.shampooDate.toISOString())
+      localforage.setItem('shampoo_date', this.shampooDate.toISOString());
+      this.init();
     }
   }
 }
