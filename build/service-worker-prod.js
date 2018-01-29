@@ -19,11 +19,16 @@
         navigator.serviceWorker.register('service-worker.js')
         .then(function(registration) {
           // updatefound is fired if service-worker.js changes.
+
+          registration.showNotification("hello world");
+
+
           registration.onupdatefound = function() {
             // updatefound is also fired the very first time the SW is installed,
             // and there's no need to prompt for a reload at that point.
             // So check here to see if the page is already controlled,
             // i.e. whether there's an existing service worker.
+            
             if (navigator.serviceWorker.controller) {
               // The updatefound event implies that registration.installing is set
               var installingWorker = registration.installing;
